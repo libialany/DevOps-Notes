@@ -4,13 +4,17 @@ import threading
 import signal
 import sys
 
+nickname = input("Choose a Nickname: ")
+client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+client.connect(("127.0.0.1",55555))
+
+def signal_handler(sig, frame):
+    print("\n\n[*] Exiting...\n")
+    sys.exit(0)
 
 # handle exiting
 signal.signal(signal.SIGINT, signal_handler)
 
-nickname = input("Choose a Nickname: ")
-client = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-client.connect(("127.0.0.1",55555))
 
 # starting the connection
 def receive():
@@ -31,13 +35,6 @@ def write():
     while True:
         message = f"{nickname}: {input('')}"
         client.send(message.encode('ascii'))
-
-
-def sig_handler(sig, frame):
-    print("\n\n[*] Exiting...\n")
-    sys.exit(0)
-
-
 
 if __name__ == "__main__":
     
