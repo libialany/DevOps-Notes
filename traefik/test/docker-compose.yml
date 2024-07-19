@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  react-app:
+    build: ./landingPage
+    networks:
+      - traefik-network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.react-app.rule=Host(`react-app.example.com`)"
+      - "traefik.http.services.react-app.loadbalancer.server.port=5173"
+    expose:
+      - "5173"
+
+  traefik:
+    image: traefik:v2.5
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+    networks:
+      - traefik-network
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+
+networks:
+  traefik-network:
+    external: true
