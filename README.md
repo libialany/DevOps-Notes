@@ -1,2 +1,4 @@
-# TCP-chat-room
-Network Programming with Python 
+
+### create a netowrk
+
+`sudo docker network create  traefik-network`
