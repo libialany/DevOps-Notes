@@ -2,22 +2,22 @@ version: '3.8'
 
 services:
   web:
-    command: uvicorn main:app --host 0.0.0.0 --port 8080
+    command: uvicorn main:app --host 0.0.0.0 --port 8081
     build: ./app
     expose:  # new
-      - 8080
+      - 8081
     labels:  # new
       - "traefik.enable=true"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi-traefik.testlib.com`)"
-      - "traefik.http.services.fastapi.loadbalancer.server.port=8080"
+      - "traefik.http.services.fastapi.loadbalancer.server.port=8081"
     networks:
       - traefik-network
-  traefik:  # new
+  traefik:
     build:
       context: traefik
       dockerfile: Dockerfile
     ports:
-      - 8081:8080
+      - 80:8081
     volumes:
       - "./traefik/traefik.dev.toml:/etc/traefik/traefik.toml"
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
