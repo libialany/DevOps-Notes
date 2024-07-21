@@ -4,11 +4,11 @@ services:
   web:
     command: uvicorn main:app --host 0.0.0.0 --port 8081
     build: ./app
-    expose:  # new
+    expose:
       - 8081
-    labels:  # new
+    labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.fastapi.rule=Host(`fastapi-traefik.testlib.com`)"
+      - "traefik.http.routers.fastapi.rule=Host(`fastapi.testlib.com`)"
       - "traefik.http.services.fastapi.loadbalancer.server.port=8081"
     networks:
       - traefik-network
