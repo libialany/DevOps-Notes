@@ -9,8 +9,6 @@ services:
     labels:  # new
       - "traefik.enable=true"
       - "traefik.http.routers.fastapi.rule=Host(`fastapi-traefik.testlib.com`)"
-      - "traefik.http.routers.fastapi.tls=true"
-      - "traefik.http.routers.fastapi.tls.certresolver=letsencrypt"
       - "traefik.http.services.fastapi.loadbalancer.server.port=8080"
     networks:
       - traefik-network
