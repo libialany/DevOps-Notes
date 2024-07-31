@@ -1,0 +1,30 @@
+services:
+
+  fastapi:
+    build: ./server
+    labels:
+      - traefik.enable=true
+      
+      ### hello
+      - traefik.http.routers.hello.rule=Host(`libops.com`) && PathPrefix(`/hello`)
+      - traefik.http.services.hello.loadbalancer.server.port=8080
+      - traefik.http.routers.hello.service=hello
+      ### hello ai
+      - traefik.http.routers.hello-ai.rule=Host(`libops.com`) && PathPrefix(`/hello-ai`)
+      - traefik.http.routers.hello-ai.middlewares=rate-limit@docker
+      - traefik.http.services.hello-ai.loadbalancer.server.port=8080
+      - traefik.http.routers.hello-ai.service=hello-ai
+      - traefik.http.middlewares.rate-limit.ratelimit.average=1
+      - traefik.http.middlewares.rate-limit.ratelimit.period=1h
+      - traefik.http.middlewares.rate-limit.ratelimit.burst=5
+      - traefik.http.middlewares.rate-limit.ratelimit.sourcecriterion.ipstrategy.depth=1
+
+  traefik:
+    build:
+      context: traefik
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - "./traefik/traefik.toml:/etc/traefik/traefik.toml"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
